@@ -145,7 +145,7 @@ public class 动态开启和关闭字段的脱敏 {
         person.setPassword("PA23235454");
         person.setAddress("上海市松江区佘山镇");
 
-        // 脱敏开关配置
+        // 脱敏配置
         Map<FieldType, FieldConfig> config = new HashMap<>();
         config.put(FieldType.CHINESE_NAME, new FieldConfig(false));
         config.put(FieldType.MOBILE, new FieldConfig(false));
