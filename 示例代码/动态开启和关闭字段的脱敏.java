@@ -5,7 +5,7 @@ public class 动态开启和关闭字段的脱敏 {
 
     public static void main(String[] args) throws Exception {
 
-        简单示例.Person person = new 简单示例.Person();
+        Person person = new Person();
         person.setName("张三");
         person.setMobile("18019295001");
         person.setPassword("PA23235454");

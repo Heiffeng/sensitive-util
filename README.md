@@ -53,19 +53,21 @@ public class Test{
 ```java
 public class 复杂对象脱敏演示 {
     public static void main(String[] args) throws Exception {
+        // 这里有一个叫张三的人
         Person zhangsan = new Person();
         zhangsan.setName("张三");
         zhangsan.setMobile("18019295001");
         zhangsan.setPassword("PA23235454");
         zhangsan.setAddress("上海市松江区佘山镇");
-
+        // 这里有一个叫李四的人
         Person lisi = new Person();
         lisi.setName("李四");
         lisi.setMobile("18018732893");
         lisi.setPassword("HAHAHAHAHA");
         lisi.setAddress("上海市嘉定区南翔镇");
-
+        // 李四是张三的朋友
         zhangsan.setFriends(Arrays.asList(lisi));
+        // 对张三进行脱敏
         SensitiveUtil.apply(zhangsan);
         System.out.println(zhangsan);
     }
@@ -91,7 +93,7 @@ public class 复杂对象脱敏演示 {
 ## 非注解方式脱敏
 
 如果要脱敏的对象中有Map类型，或者要脱敏的对象处于一个不可更改的状态，无法添加注解。
-那么可以非注解脱敏的方式就可以发挥作用了。
+那么非注解脱敏的方式就可以发挥作用了。
 
 ```java
 public class 非注解方式脱敏 {
@@ -168,3 +170,13 @@ public class 动态开启和关闭字段的脱敏 {
 ```
 
 `Person{name='张三', mobile='18019295001', address='<地址被隐藏>', password='**********'}`
+
+
+# 注意事项
+
+## 注解和非注解，两种脱敏方式的区别
+1. 注解方式是调用`SensitiveUtil.apply(T data)`,非注解方式是`SensitiveUtil.parse(T data)`
+2. 注解方式需要修改实体类，在实体类的字段上加注解以标明该字段的类型。
+3. 非注解方式需要修改`FieldType.fieldTypeMap`对象，以此表明字段名和字段类型的关联关系。
+4. 注解方式无法对Map类型的对象脱敏。只能对JavaBean对象脱敏。因你必须先有注解，Map肯定是无法使用注解的。
+5. 非注解方式可以对Map类型的对象脱敏，也可以对JavaBean对象脱敏。

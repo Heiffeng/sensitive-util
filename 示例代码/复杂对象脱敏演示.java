@@ -4,19 +4,21 @@ import java.util.List;
 public class 复杂对象脱敏演示 {
 
     public static void main(String[] args) throws Exception {
+        // 这里有一个叫张三的人
         Person zhangsan = new Person();
         zhangsan.setName("张三");
         zhangsan.setMobile("18019295001");
         zhangsan.setPassword("PA23235454");
         zhangsan.setAddress("上海市松江区佘山镇");
-
+        // 这里有一个叫李四的人
         Person lisi = new Person();
         lisi.setName("李四");
         lisi.setMobile("18018732893");
         lisi.setPassword("HAHAHAHAHA");
         lisi.setAddress("上海市嘉定区南翔镇");
-
+        // 李四是张三的朋友
         zhangsan.setFriends(Arrays.asList(lisi));
+        // 对张三进行脱敏
         SensitiveUtil.apply(zhangsan);
         System.out.println(zhangsan);
     }
