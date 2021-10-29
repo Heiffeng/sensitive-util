@@ -41,3 +41,56 @@ public class Test{
 }
 ```
 输出结果：`Person{name='张三', mobile='180****5001', address='上海市松江区***', password='**********'}`
+
+
+# 更多示例
+
+## 复杂对象脱敏演示
+张三有个朋友叫李四。用`SensitiveUtil.apply(zhangsan);`脱敏张三的信息时。
+李四这个朋友作为一个List<Person>集合存在与张三这个对象中，也会被脱敏。
+`SensitiveUtil`工具类使用反射深度扫描`zhangsan`这个对象中一切被`@Sensitive`注解的字段。
+
+```java
+public class 复杂对象脱敏演示 {
+    public static void main(String[] args) throws Exception {
+        Person zhangsan = new Person();
+        zhangsan.setName("张三");
+        zhangsan.setMobile("18019295001");
+        zhangsan.setPassword("PA23235454");
+        zhangsan.setAddress("上海市松江区佘山镇");
+
+        Person lisi = new Person();
+        lisi.setName("李四");
+        lisi.setMobile("18018732893");
+        lisi.setPassword("HAHAHAHAHA");
+        lisi.setAddress("上海市嘉定区南翔镇");
+
+        zhangsan.setFriends(Arrays.asList(lisi));
+        SensitiveUtil.apply(zhangsan);
+        System.out.println(zhangsan);
+    }
+
+    @Data
+    @ToString
+    static class Person {
+        private String name;
+        @Sensitive(FieldType.MOBILE)
+        private String mobile;
+        @Sensitive(FieldType.ADDRESS)
+        private String address;
+        @Sensitive(FieldType.PASSWORD)
+        private String password;
+
+        private List<Person> friends;
+    }
+}
+
+```
+`Person{name='张三', mobile='180****5001', address='上海市松江区***', password='**********', friends=[Person{name='李四', mobile='180****2893', address='上海市嘉定区***', password='**********', friends=null}]}`
+## 非注解方式脱敏
+
+## 自定义字段脱敏
+
+## 根据业务动态配置脱敏字段
+
+
