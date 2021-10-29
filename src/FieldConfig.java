@@ -13,6 +13,22 @@ public class FieldConfig {
     // 比如平台系统中，用户存在多个机构，每个机构需要有不同的脱敏规则。
     private Function<String,String> function;
 
+    public FieldConfig() {
+    }
+
+    public FieldConfig(Boolean need) {
+        this.need = need;
+    }
+
+    public FieldConfig(Function<String, String> function) {
+        this.function = function;
+    }
+
+    public FieldConfig(Boolean need, Function<String, String> function) {
+        this.need = need;
+        this.function = function;
+    }
+
     public Boolean getNeed() {
         return need;
     }

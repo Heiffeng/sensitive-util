@@ -126,8 +126,45 @@ public class 非注解方式脱敏 {
 需要在这个map中，配置好字段名与字段类型之间的关系。
 
 
-## 添加脱敏字段类型
+## 根据业务需要动态开启和关闭字段的脱敏
 
-## 根据业务动态配置脱敏字段
+张三是系统管理员，李四是某机构下的一个员工。
+俩人的权限不同，张三需要看到全部的数据，而李四则只能看到脱敏后的数据。
+因此脱敏工具类需要根据业务权限或者其他的配置去决定是否需要脱敏。
 
+```java
+public class 动态开启和关闭字段的脱敏 {
 
+    public static void main(String[] args) throws Exception {
+
+        简单示例.Person person = new 简单示例.Person();
+        person.setName("张三");
+        person.setMobile("18019295001");
+        person.setPassword("PA23235454");
+        person.setAddress("上海市松江区佘山镇");
+
+        // 脱敏开关配置
+        Map<FieldType, FieldConfig> config = new HashMap<>();
+        config.put(FieldType.CHINESE_NAME, new FieldConfig(false));
+        config.put(FieldType.MOBILE, new FieldConfig(false));
+        config.put(FieldType.ADDRESS, new FieldConfig(value -> "<地址被隐藏>"));
+        // 执行脱敏方法
+        SensitiveUtil.apply(person, config);
+        System.out.println(person);
+
+    }
+
+    static class Person {
+        @Sensitive(FieldType.CHINESE_NAME)
+        private String name;
+        @Sensitive(FieldType.MOBILE)
+        private String mobile;
+        @Sensitive(FieldType.ADDRESS)
+        private String address;
+        @Sensitive(FieldType.PASSWORD)
+        private String password;
+    }
+}
+```
+
+`Person{name='张三', mobile='18019295001', address='<地址被隐藏>', password='**********'}`
