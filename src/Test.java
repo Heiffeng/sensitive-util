@@ -3,7 +3,7 @@ public class Test {
     public static void main(String[] args) throws Exception {
         Person person = new Person();
         person.setName("张三");
-        person.setMobile("18037170703");
+        person.setMobile("18019295001");
         person.setAddress("上海市松江区佘山镇");
         SensitiveUtil.apply(person);
         System.out.println("Name:" + person.getName());

@@ -44,6 +44,7 @@ Thumbs.db
 *.test
 
 # Output of the go coverage tool, specifically when used with LiteIDE
+out/
 *.out
 classes
 
@@ -56,3 +57,6 @@ coverage.txt
 
 test/jobs
 version-matrix.txt
+
+
+out/
