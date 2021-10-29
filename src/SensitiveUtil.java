@@ -226,7 +226,9 @@ public class SensitiveUtil<T> {
                         Object value = map.get(key);
                         if(key instanceof String && value instanceof String){
                             FieldType fieldType = fieldTypeFunction.apply((String)key);
-                            map.put(key,fieldType.convert((String) value,config.get(fieldType)));
+                            if(fieldType != null){
+                                map.put(key,fieldType.convert((String) value,config.get(fieldType)));
+                            }
                         }else{
                             convert(map.get(key));
                         }
@@ -273,6 +275,15 @@ public class SensitiveUtil<T> {
                         Map map = (Map) method.invoke(data);
                         if(map != null && !map.isEmpty()){
                             for (Object key : map.keySet()) {
+                                Object value = map.get(key);
+                                if(key instanceof String && value instanceof String){
+                                    FieldType fieldType = fieldTypeFunction.apply((String)key);
+                                    if(fieldType != null){
+                                        map.put(key,fieldType.convert((String) value,config.get(fieldType)));
+                                    }
+                                }else{
+                                    convert(map.get(key));
+                                }
                                 convert(map.get(key));
                             }
                         }
