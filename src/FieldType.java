@@ -1,3 +1,5 @@
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -37,6 +39,24 @@ public enum FieldType {
         Function<String, String> function =
                 (fieldConfig != null && fieldConfig.getFunction() != null) ? fieldConfig.getFunction() : defaultFunction;
         return function.apply(value);
+    }
+
+
+    private final static Map<String,FieldType> fieldTypeMap = new HashMap<>();
+    static{
+        fieldTypeMap.put("mobile",MOBILE);
+        fieldTypeMap.put("address",ADDRESS);
+        fieldTypeMap.put("email",EMAIL);
+        fieldTypeMap.put("bankcard",BANKCARD);
+        fieldTypeMap.put("idcard",IDCARD);
+        fieldTypeMap.put("password",PASSWORD);
+        fieldTypeMap.put("chineseName",CHINESE_NAME);
+    }
+    public static FieldType parseFieldType(String fieldName){
+        if(fieldTypeMap.containsKey(fieldName)){
+            return fieldTypeMap.get(fieldName);
+        }
+        return null;
     }
 
 }

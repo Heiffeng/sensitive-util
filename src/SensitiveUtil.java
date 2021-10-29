@@ -3,6 +3,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * 脱敏工具类
@@ -25,21 +26,12 @@ public class SensitiveUtil<T> {
     }
 
     /**
-     * 生成工具类
-     * 该工具类使用注解方式进行脱敏。
-     * 需要在脱敏的字段上加上 {@link Sensitive} 注解
+     * 调用此方法进行脱敏
      * @param data 需要脱敏的数据
-     * @param config 脱敏开关配置
+     * @param config 脱敏配置
      * @param <T>
-     * @return 生成的工具类
+     * @throws Exception
      */
-    public static <T> SensitiveUtil<T> create(T data, Map<FieldType,FieldConfig> config){
-        return new SensitiveUtil<T>(data,config);
-    }
-    public static <T> SensitiveUtil<T> create(T data){
-        return new SensitiveUtil<T>(data,new HashMap<>());
-    }
-
     public static <T> void apply(T data, Map<FieldType,FieldConfig> config) throws Exception {
         new SensitiveUtil<T>(data,config).convert();
     }
@@ -48,27 +40,30 @@ public class SensitiveUtil<T> {
     }
 
     /**
-     * 生成工具类
-     * 不使用注解的工具类
-     * 需要一个实现了{@link IFieldTypeParse}的实例，
-     * 该示例负责将字段名解析成对应的{@link FieldType}类型
-     * @param data  需要脱敏的数据
-     * @param config 脱敏开关配置
-     * @param fieldTypeParse 字段识别转换
+     * 不使用注解的方式脱敏
+     * @param data
+     * @param config
+     * @param fieldTypeFunction
      * @param <T>
-     * @return
+     * @throws Exception
      */
-    public static <T> WithoutAnnotationUtil<T> create(T data, Map<FieldType,FieldConfig> config, IFieldTypeParse fieldTypeParse){
-        return WithoutAnnotationUtil.create(data,config,fieldTypeParse);
+    public static <T> void parse(T data, Map<FieldType,FieldConfig> config, Function<String,FieldType> fieldTypeFunction) throws Exception {
+        WithoutAnnotationUtil.create(data,config,fieldTypeFunction).convert();
+    }
+    public static <T> void parse(T data, Map<FieldType,FieldConfig> config) throws Exception {
+        WithoutAnnotationUtil.create(data,config,FieldType::parseFieldType).convert();
+    }
+    public static <T> void parse(T data, Function<String,FieldType> fieldTypeFunction) throws Exception {
+        WithoutAnnotationUtil.create(data,new HashMap<>(),fieldTypeFunction).convert();
+    }
+    public static <T> void parse(T data) throws Exception {
+        WithoutAnnotationUtil.create(data,new HashMap<>(),FieldType::parseFieldType).convert();
     }
 
     /**
      * 开始做脱敏工作
      */
     public void convert() throws Exception {
-//        if(data==null||config.allFalse()) {
-//            return;
-//        }
         convert(data);
     }
 
@@ -190,11 +185,11 @@ public class SensitiveUtil<T> {
         // 脱敏开关配置
         private Map<FieldType,FieldConfig> config;
 
-        private IFieldTypeParse fieldTypeParse;
+        private Function<String,FieldType> fieldTypeFunction;
 
-        private WithoutAnnotationUtil(T data, Map<FieldType,FieldConfig> config, IFieldTypeParse iFieldTypeParse) {
+        private WithoutAnnotationUtil(T data, Map<FieldType,FieldConfig> config, Function<String,FieldType> fieldTypeFunction) {
             this.data = data;
-            this.fieldTypeParse = iFieldTypeParse;
+            this.fieldTypeFunction = fieldTypeFunction;
             this.config = config;
         }
 
@@ -205,14 +200,11 @@ public class SensitiveUtil<T> {
          * @param <T>
          * @return
          */
-        public static <T> WithoutAnnotationUtil<T> create(T data, Map<FieldType,FieldConfig> config, IFieldTypeParse iFieldTypeParse){
-            return new WithoutAnnotationUtil<T>(data,config,iFieldTypeParse);
+        public static <T> WithoutAnnotationUtil<T> create(T data, Map<FieldType,FieldConfig> config, Function<String,FieldType> fieldTypeFunction){
+            return new WithoutAnnotationUtil<T>(data,config,fieldTypeFunction);
         }
 
         public void convert() throws Exception {
-//            if(data==null||config.allFalse()) {
-//                return;
-//            }
             convert(data);
         }
 
@@ -256,7 +248,7 @@ public class SensitiveUtil<T> {
                 boolean isPrimitiveReturn = method.getReturnType().isPrimitive();
                 if(isZeroParameter && isGetMethod && !isReturnVoid && !isPrimitiveReturn) {
                     if(method.getReturnType().equals(String.class)){
-                        FieldType fieldType = fieldTypeParse.parse(method.getName().replace("get","").toLowerCase());
+                        FieldType fieldType = fieldTypeFunction.apply(method.getName().replace("get","").toLowerCase());
                         if(fieldType != null){
                             String value = (String) method.invoke(data);
                             if(value != null && !value.isEmpty()){
@@ -287,13 +279,5 @@ public class SensitiveUtil<T> {
                 }
             }
         }
-    }
-
-    /**
-     * 字段类型转换接口
-     * 由各系统自己实现
-     */
-    public static interface IFieldTypeParse{
-        FieldType parse(String fieldName);
     }
 }

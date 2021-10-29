@@ -7,7 +7,7 @@ public class Test {
         person.setPassword("PA23235454");
         person.setAddress("上海市松江区佘山镇");
         // 执行脱敏方法
-        SensitiveUtil.apply(person);
+        SensitiveUtil.parse(person);
         System.out.println(person);
     }
 }
