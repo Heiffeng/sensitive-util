@@ -223,7 +223,13 @@ public class SensitiveUtil<T> {
                 Map map = (Map) data;
                 if(map != null && !map.isEmpty()){
                     for (Object key : map.keySet()) {
-                        convert(map.get(key));
+                        Object value = map.get(key);
+                        if(key instanceof String && value instanceof String){
+                            FieldType fieldType = fieldTypeFunction.apply((String)key);
+                            map.put(key,fieldType.convert((String) value,config.get(fieldType)));
+                        }else{
+                            convert(map.get(key));
+                        }
                     }
                 }
             }else{
@@ -270,7 +276,7 @@ public class SensitiveUtil<T> {
                                 convert(map.get(key));
                             }
                         }
-                    }else if(!method.getReturnType().getPackage().getName().startsWith("java.")){
+                    }else if(method.getReturnType().getPackage()!=null && !method.getReturnType().getPackage().getName().startsWith("java.")){
                         Object obj = method.invoke(data);
                         if(null != obj){
                             convertObject(obj);
