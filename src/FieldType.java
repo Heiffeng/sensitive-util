@@ -6,12 +6,20 @@ import java.util.function.Function;
  * @Date: 2020/11/24 16:03
  */
 public enum FieldType {
-    // 手机号码
-    MOBILE((value)->Convert.convertMobile(value)),
-    // 地址
-    ADDRESS((value)->Convert.convertAddress(value)),
-    // 邮件
-    EMAIL((value)->Convert.convertEmail(value));
+    // 手机号码，脱敏后：186****0590
+    MOBILE(Convert::mobile),
+    // 地址，脱敏后：太原市小店区****
+    ADDRESS(Convert::address),
+    // 邮件，脱敏后：p**@163.com
+    EMAIL(Convert::email),
+    // 银行卡，脱敏后：622260**********1234
+    BANKCARD(Convert::bankCard),
+    // 身份证，脱敏后：140101*******1234
+    IDCARD(Convert::idCard),
+    // 密码，脱敏后：******
+    PASSWORD(Convert::all),
+    // 中文名，脱敏后：张*伦
+    CHINESE_NAME(Convert::chineseName);
 
     // 默认脱敏实现
     private Function<String,String> defaultFunction;

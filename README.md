@@ -15,24 +15,28 @@
 ## 简单示例
 ```java
 @Data
+@ToString
 class Person{
     private String name;
     @Sensitive(FieldType.MOBILE)
     private String mobile;
     @Sensitive(FieldType.ADDRESS)
     private String address;
+    @Sensitive(FieldType.PASSWORD)
+    private String password;
 }
 
 public class Test{
     public static void main(String[] args) {
         Person person = new Person();
         person.setName("张三");
-        person.setMobile("18037170703");
+        person.setMobile("18019295001");
+        person.setPassword("PA23235454");
         person.setAddress("上海市松江区佘山镇");
+        // 执行脱敏方法
         SensitiveUtil.apply(person);
-        System.out.println("Name:" + person.getName());
-        System.out.println("Mobile:" + person.getMobile());
-        System.out.println("Address:" + person.getAddress());
+        System.out.println(person);
     }
 }
 ```
+输出结果：`Person{name='张三', mobile='180****5001', address='上海市松江区***', password='**********'}`
