@@ -42,6 +42,8 @@ public enum FieldType {
     }
 
 
+    // 字段名和字段类型关系表，用于非注解方式脱敏
+    // 字段名会忽略字母大小写
     private final static Map<String,FieldType> fieldTypeMap = new HashMap<>();
     static{
         fieldTypeMap.put("mobile",MOBILE);
@@ -50,7 +52,7 @@ public enum FieldType {
         fieldTypeMap.put("bankcard",BANKCARD);
         fieldTypeMap.put("idcard",IDCARD);
         fieldTypeMap.put("password",PASSWORD);
-        fieldTypeMap.put("chineseName",CHINESE_NAME);
+        fieldTypeMap.put("chinesename",CHINESE_NAME);
     }
     public static FieldType parseFieldType(String fieldName){
         if(fieldTypeMap.containsKey(fieldName)){
