@@ -18,6 +18,8 @@ public class 简单示例 {
         private String mobile;
         @Sensitive(FieldType.ADDRESS)
         private String address;
+        @Sensitive(FieldType.EMAIL)
+        private String email;
         @Sensitive(FieldType.PASSWORD)
         private String password;
 
@@ -37,6 +39,14 @@ public class 简单示例 {
             this.mobile = mobile;
         }
 
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+        
         public String getAddress() {
             return address;
         }
