@@ -182,4 +182,4 @@ public class 动态开启和关闭字段的脱敏 {
 5. 非注解方式可以对Map类型的对象脱敏，也可以对JavaBean对象脱敏。
 
 ## 不适用情况说明
-仅可以对JavaBean进行脱敏，比如：无法直接对String或者List<String>进行脱敏。
+仅可以对JavaBean进行脱敏，比如：无法直接对`String`或者`List<String>`进行脱敏。
